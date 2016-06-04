@@ -5,6 +5,7 @@ namespace Scripts;
 use IRC\Event\Command\CommandEvent;
 use IRC\Event\Listener;
 use IRC\Event\Plugin\PluginLoadEvent;
+use IRC\Event\Plugin\PluginUnloadEvent;
 use IRC\Plugin\PluginBase;
 
 class Scripts extends PluginBase implements Listener{
@@ -24,6 +25,14 @@ class Scripts extends PluginBase implements Listener{
     public function onPluginLoadEvent(PluginLoadEvent $event){
         foreach($event->getPlugin()->commands as $command => $info){
             $this->pluginCommands[strtolower($command)] = $info;
+        }
+    }
+
+    public function onPluginUnloadEvent(PluginUnloadEvent $event){
+        foreach($event->getPlugin()->commands as $command => $info){
+            if(isset($this->pluginCommands[strtolower($command)])){
+                unset($this->pluginCommands[strtolower($command)]);
+            }
         }
     }
 
