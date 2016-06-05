@@ -1,9 +1,16 @@
 {
   "name":"Scripts",
   "author":"Niklas Kreer",
-  "version":1,
+  "version":2,
   "api":1,
   "description":"Execute command-scripts",
   "main":"Scripts.php",
-  "load":true
+  "load":true,
+  "configuration":{
+    "php":"php",
+    "py":"python",
+    "pl":"perl",
+    "sh":"sh",
+    "rb":"ruby"
+  }
 }
