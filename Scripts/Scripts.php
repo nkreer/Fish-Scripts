@@ -13,35 +13,28 @@ class Scripts extends PluginBase implements Listener{
 
     private $pluginCommands = [];
     private $config = [];
-    
+
     public function onLoad(){
         $this->config = json_decode(file_get_contents("plugins/Scripts/plugin.json"), true)["configuration"];
-        $plugins = $this->getPluginManager()->getPlugins();
-        foreach($plugins as $plugin){
-            $this->addPlugin($plugin);
-        }
+        $this->updateCommands();
         $this->getEventHandler()->registerEvents($this, $this->plugin);
     }
 
-    /**
-     * @param Plugin $plugin
-     */
-    public function addPlugin(Plugin $plugin){
-        foreach($plugin->commands as $command => $info){
-            $this->pluginCommands[strtolower($command)] = $info;
+
+    public function updateCommands(){
+        $this->pluginCommands = [];
+        $commands = $this->getConnection()->getCommandMap()->getCommands();
+        foreach($commands as $command){
+            $this->pluginCommands[$command->getCommand()] = true;
         }
     }
 
     public function onPluginLoadEvent(PluginLoadEvent $event){
-        $this->addPlugin($event->getPlugin());
+        $this->updateCommands();
     }
 
     public function onPluginUnloadEvent(PluginUnloadEvent $event){
-        foreach($event->getPlugin()->commands as $command => $info){
-            if(isset($this->pluginCommands[strtolower($command)])){
-                unset($this->pluginCommands[strtolower($command)]);
-            }
-        }
+        $this->updateCommands();
     }
 
     /**
@@ -90,6 +83,7 @@ class Scripts extends PluginBase implements Listener{
                     $event->getChannel()->sendMessage("Error! Script terminated with exit status ".$result);
                 }
             }
+            $event->setCancelled();
         }
     }
 
