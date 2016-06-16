@@ -5,7 +5,7 @@ This is a plugin for the [Fish IRC-Bot](https://github.com/nkreer/Fish) which al
 ## Installation
 
 To install this, simply drop the _Scripts.phar_ into the _plugins_ directory. Then, either restart the bot or load the plugin manually.
-You might want to change the configuration found in plugin.json if the language interpreters are not in your PATH.
+You might want to change the configuration found in config.json if the language interpreters are not in your PATH.
 
 ## Custom Scripts
 
@@ -33,3 +33,7 @@ which on the IRC can be used like this:
 ```
 
 If a script fails for some reason, the bot will tell you its exit status.
+
+## License
+
+This code is released to the public domain

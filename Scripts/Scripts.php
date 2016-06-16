@@ -8,6 +8,7 @@ use IRC\Event\Plugin\PluginLoadEvent;
 use IRC\Event\Plugin\PluginUnloadEvent;
 use IRC\Plugin\Plugin;
 use IRC\Plugin\PluginBase;
+use IRC\Utils\JsonConfig;
 
 class Scripts extends PluginBase implements Listener{
 
@@ -15,11 +16,15 @@ class Scripts extends PluginBase implements Listener{
     private $config = [];
 
     public function onLoad(){
-        $this->config = json_decode(file_get_contents("plugins/Scripts/plugin.json"), true)["configuration"];
+        if(!is_file($this->getDataPath()."config.json")){
+            $this->config = ["php"=>"php", "py"=>"python", "rb"=>"ruby", "sh"=>"sh", "pl"=>"perl"];
+            file_put_contents($this->getDataPath()."config.json", json_encode($this->config, JSON_PRETTY_PRINT));
+        } else {
+            $this->config = json_decode(file_get_contents($this->getDataPath()."config.json"), true);
+        }
         $this->updateCommands();
         $this->getEventHandler()->registerEvents($this, $this->plugin);
     }
-
 
     public function updateCommands(){
         $this->pluginCommands = [];
@@ -60,7 +65,7 @@ class Scripts extends PluginBase implements Listener{
      * @return bool|string
      */
     public function isScript($command){
-        $files = glob("plugins/Scripts/scripts/".basename($command).".*");
+        $files = glob($this->getDataPath().basename($command).".*");
         foreach($files as $file){
             if(is_file($file)){
                 return $file;
