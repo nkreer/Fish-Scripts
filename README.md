@@ -4,7 +4,7 @@ This is a plugin for the [Fish IRC-Bot](https://github.com/nkreer/Fish) which al
 
 ## Installation
 
-To install this, simply drop the "Scripts/" folder into the "plugins/" directory. Then, either restart the bot or load the plugin manually.
+To install this, simply drop the _Scripts.phar_ into the _plugins_ directory. Then, either restart the bot or load the plugin manually.
 You might want to change the configuration found in plugin.json if the language interpreters are not in your PATH.
 
 ## Custom Scripts
