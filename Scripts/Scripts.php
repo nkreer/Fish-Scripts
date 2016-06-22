@@ -48,7 +48,7 @@ class Scripts extends PluginBase implements Listener{
      * @return array|number
      */
     public function executeScript($command, CommandEvent $event){
-        $shell = $event->getChannel()->getName()." ".$event->getUser()->getNick()." ".implode(" ", $event->getArgs());
+        $shell = $event->getChannel()->getName()." ".$event->getUser()->getNick()." ".escapeshellcmd(implode(" ", $event->getArgs()));
         $interpreter = (new \SplFileObject($command))->getExtension();
         if(isset($this->config[$interpreter])){
             exec($this->config[$interpreter]." ".$command." ".escapeshellcmd($shell), $output, $return);
@@ -79,13 +79,15 @@ class Scripts extends PluginBase implements Listener{
         if(!isset($this->pluginCommands[$command])){
             $script = $this->isScript($command);
             if($script !== false){
-                $result = $this->executeScript($script, $event);
-                if(is_array($result)){
-                    foreach($result as $message){
-                        $event->getChannel()->sendMessage($message);
+                if(!$this->getConnection()->getCommandHandler()->isBlocked($event->getUser())){
+                    $result = $this->executeScript($script, $event);
+                    if(is_array($result)){
+                        foreach($result as $message){
+                            $event->getChannel()->sendMessage($message);
+                        }
+                    } else {
+                        $event->getChannel()->sendMessage("Error! Script terminated with exit status ".$result);
                     }
-                } else {
-                    $event->getChannel()->sendMessage("Error! Script terminated with exit status ".$result);
                 }
             }
             $event->setCancelled();
