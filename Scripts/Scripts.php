@@ -28,10 +28,7 @@ class Scripts extends PluginBase implements Listener{
 
     public function updateCommands(){
         $this->pluginCommands = [];
-        $commands = $this->getConnection()->getCommandMap()->getCommands();
-        foreach($commands as $command){
-            $this->pluginCommands[$command->getCommand()] = true;
-        }
+        $this->pluginCommands = $this->getConnection()->getCommandMap()->getCommands();
     }
 
     public function onPluginLoadEvent(PluginLoadEvent $event){
@@ -88,6 +85,8 @@ class Scripts extends PluginBase implements Listener{
                     } else {
                         $event->getChannel()->sendMessage("Error! Script terminated with exit status ".$result);
                     }
+                } else {
+                    $event->getUser()->sendNotice("You're currently blocked from using commands.");
                 }
             }
             $event->setCancelled();
