@@ -88,8 +88,8 @@ class Scripts extends PluginBase implements Listener{
                 } else {
                     $event->getUser()->sendNotice("You're currently blocked from using commands.");
                 }
+                $event->setCancelled();
             }
-            $event->setCancelled();
         }
     }
 
